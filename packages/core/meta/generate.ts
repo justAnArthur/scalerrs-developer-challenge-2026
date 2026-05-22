@@ -53,9 +53,9 @@ export async function buildMeta(markdown: string, docMetas: Record<string, strin
   else sources['keywords'] = 'generated'
 
   return {
-    metaTitle:       resolve('metaTitle'),
+    metaTitle: resolve('metaTitle'),
     metaDescription: resolve('metaDescription'),
     keywords,
-    sources,
+    sources
   }
 }

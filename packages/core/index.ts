@@ -1,9 +1,9 @@
-import { parseHTML } from "@tkeron/html-parser"
+import { parse } from "node-html-parser"
 import { extractFromDoc } from "./extract.ts"
 import type { Extracted } from "./types.ts"
 
 export function extractFromHtml(html: string): Extracted {
-  return extractFromDoc(parseHTML(html))
+  return extractFromDoc(parse(html))
 }
 
 export { runChecks } from "./checks/index.ts"

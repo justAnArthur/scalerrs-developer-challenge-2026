@@ -11,15 +11,15 @@ export async function runChecks(extracted: Extracted): Promise<ChecksReport & { 
   // run static and ai checks in parallel
   const [staticChecks, aiChecks] = await Promise.all([
     runStaticChecks(extracted),
-    runAiChecks(markdown),
+    runAiChecks(markdown)
   ])
 
   const checks: CheckResult[] = [...staticChecks, ...aiChecks]
 
   const summary = {
-    passed:   checks.filter(c => c.status === 'pass').length,
+    passed: checks.filter(c => c.status === 'pass').length,
     warnings: checks.filter(c => c.status === 'warning').length,
-    errors:   checks.filter(c => c.status === 'error').length,
+    errors: checks.filter(c => c.status === 'error').length
   }
 
   return { checks, summary, markdown }

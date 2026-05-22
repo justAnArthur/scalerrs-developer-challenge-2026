@@ -1,4 +1,4 @@
-import type { Document, ChildNode } from "@tkeron/html-parser/src/dom-types.ts"
+import { parse } from "node-html-parser"
 import type { Extracted } from "./types.ts"
 
 const supportedMetas = [
@@ -7,16 +7,8 @@ const supportedMetas = [
   { name: 'keywords', aliases: ['Meta Keywords'] }
 ]
 
-// depth-first walk collecting elements whose tag matches the predicate - the querySelectorAll is not fully supported
-function walkElements(node: ChildNode, match: (tag: string) => boolean, result: { tag: string; text: string }[] = []) {
-  const tag = (node as any).tagName?.toLowerCase() as string | undefined
-  if (tag && match(tag)) result.push({ tag, text: (node as any).textContent ?? '' })
-  for (const child of (node as any).childNodes ?? []) walkElements(child, match, result)
-  return result
-}
-
-export function extractFromDoc(doc: Document): Extracted {
-  const allParagraphs = doc.querySelectorAll('p')
+export function extractFromDoc(root: ReturnType<typeof parse>): Extracted {
+  const allParagraphs = root.querySelectorAll('p')
 
   // pull out meta fields from paragraphs that start with a known alias
   const metas: Record<string, string> = {}
@@ -26,31 +18,29 @@ export function extractFromDoc(doc: Document): Extracted {
       for (const alias of meta.aliases) {
         if (text.startsWith(alias + ':')) {
           metas[meta.name] = text.slice(alias.length + 1).trim()
-          p.parentNode?.removeChild(p)
+          p.remove()
         }
       }
     }
   }
 
-  const title = doc.querySelector('h1')?.textContent.trim()
+  const title = root.querySelector('h1')?.textContent.trim()
 
-  // ordered headings in document — counts derived in checks as needed
-  const headingsList = walkElements(doc as any, tag => /^h[1-6]$/.test(tag)).map(el => el.tag)
+  const headingsList = root.querySelectorAll('h1, h2, h3, h4, h5, h6')
+    .map(el => el.tagName.toLowerCase())
 
-  // word count from content elements
-  const wordCount = walkElements(doc as any, tag => /^(p|h[1-6]|li)$/.test(tag))
-    .map(el => el.text.trim())
+  const wordCount = root.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li')
+    .map(el => el.textContent.trim())
     .join(' ')
     .split(/\s+/)
     .filter(w => w).length
 
-  // images embedded in the doc
-  const images = doc.querySelectorAll('img').map(img => ({
+  const images = root.querySelectorAll('img').map(img => ({
     src: img.getAttribute('src') ?? '',
     alt: img.getAttribute('alt') ?? ''
   }))
 
-  // images referenced as "IMAGE 1" paragraphs with a link and optional alt tag
+  // images referenced as "IMAGE 1" paragraphs — extract data and replace with <img> in the DOM
   const textImages = allParagraphs
     .filter(p => p.textContent.trim().match(/IMAGE\s*\d+/i))
     .map(p => {
@@ -58,17 +48,21 @@ export function extractFromDoc(doc: Document): Extracted {
       const src = new URL(href).searchParams.get('q') ?? href
       const text = p.textContent.trim()
       const alt = text.match(/alt\s*tag\s*:\s*[\u201C\u201D"]?(.+?)[\u201C\u201D"]?$/i)?.[1]?.trim() ?? ''
+
+      // swap the paragraph for an actual img so the preview renders it
+      p.replaceWith(`<img src="${src}" alt="${alt}" />`)
+
       return { src, alt }
     })
 
   images.push(...textImages)
 
-  const links = doc.querySelectorAll('a').map(a => ({
+  const links = root.querySelectorAll('a').map(a => ({
     href: a.getAttribute('href') ?? '',
     text: a.textContent.trim()
   }))
 
-  const bodyHtml = doc.body?.innerHTML ?? doc.querySelectorAll('body')[0]?.innerHTML ?? ''
+  const bodyHtml = root.querySelector('body')?.innerHTML ?? root.innerHTML
 
   return { title, headingsList, wordCount, images, links, metas, bodyHtml }
 }

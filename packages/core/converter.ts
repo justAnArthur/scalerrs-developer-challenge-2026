@@ -3,7 +3,7 @@ import TurndownService from 'turndown'
 const td = new TurndownService({
   headingStyle: 'atx',
   bulletListMarker: '-',
-  codeBlockStyle: 'fenced',
+  codeBlockStyle: 'fenced'
 })
 
 // strip style/script noise that google docs injects

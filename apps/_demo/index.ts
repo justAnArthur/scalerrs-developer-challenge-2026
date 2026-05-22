@@ -1,4 +1,4 @@
-import { extractFromHtml, runChecks, buildMeta, toMarkdown } from "@scalerrs/core"
+import { buildMeta, extractFromHtml, runChecks, toMarkdown } from "@scalerrs/core"
 
 const docId = Bun.env.GOOGLE_DOC_ID!
 
@@ -16,7 +16,7 @@ const markdown = toMarkdown(extracted.bodyHtml)
 // run checks and meta generation in parallel
 const [report, meta] = await Promise.all([
   runChecks(extracted),
-  buildMeta(markdown, extracted.metas),
+  buildMeta(markdown, extracted.metas)
 ])
 
 // ---

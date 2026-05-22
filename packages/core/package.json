@@ -7,7 +7,7 @@
     ".": "./index.ts"
   },
   "dependencies": {
-    "@tkeron/html-parser": "^1.5.7",
+    "node-html-parser": "^7.1.0",
     "turndown": "^7.2.4"
   },
   "devDependencies": {
@@ -18,4 +18,3 @@
     "typescript": "^5"
   }
 }
-

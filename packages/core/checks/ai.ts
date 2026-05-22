@@ -20,7 +20,7 @@ function toCheckResult(c: AiCheck): CheckResult {
     id: c.id,
     type: 'ai',
     status: c.passed ? 'pass' : 'warning',
-    message: `${c.label}: ${c.message}`,
+    message: `${c.label}: ${c.message}`
   }
 }
 
