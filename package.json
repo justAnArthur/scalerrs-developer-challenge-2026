@@ -1,8 +1,11 @@
 {
   "name": "scalerrs-developer-challenge-2026",
-  "module": "index.ts",
   "type": "module",
   "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "devDependencies": {
     "@types/bun": "latest"
   },
