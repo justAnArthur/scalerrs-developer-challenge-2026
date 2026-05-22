@@ -33,7 +33,7 @@ rules:
 - return ONLY valid json, no markdown, no backticks
 - "passed" is true if the check is satisfied, false if there is an issue
 - keep messages short and specific
-- for "product-links": passed if the article has a reasonable number of product/shop links relative to its length (not zero, not excessive — e.g. every sentence); identify links by context (anchor text, surrounding copy, url patterns like /products/ /shop/ /buy/)
+- for "product-links": passed if the article has a reasonable number of product/shop links relative to its length (not zero, not excessive - e.g. every sentence); identify links by context (anchor text, surrounding copy, url patterns like /products/ /shop/ /buy/)
 
 article (markdown):
 ${markdown.slice(0, 10000)}

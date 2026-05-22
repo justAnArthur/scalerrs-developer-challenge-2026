@@ -40,7 +40,7 @@ export function extractFromDoc(root: ReturnType<typeof parse>): Extracted {
     alt: img.getAttribute('alt') ?? ''
   }))
 
-  // images referenced as "IMAGE 1" paragraphs — extract data and replace with <img> in the DOM
+  // images referenced as "IMAGE 1" paragraphs - extract data and replace with <img> in the DOM
   const textImages = allParagraphs
     .filter(p => p.textContent.trim().match(/IMAGE\s*\d+/i))
     .map(p => {

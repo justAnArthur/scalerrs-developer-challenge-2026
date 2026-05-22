@@ -1,6 +1,6 @@
 # @scalerrs/core
 
-the core library — fetch, parse, check, and generate meta for google doc articles.
+the core library - fetch, parse, check, and generate meta for google doc articles.
 
 ## install
 
