@@ -1,5 +1,5 @@
 import { parse } from "node-html-parser"
-import type { Extracted } from "./types.ts"
+import type { Extracted } from "./types"
 
 const supportedMetas = [
   { name: 'metaTitle', aliases: ['Meta Title'] },

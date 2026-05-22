@@ -1,4 +1,4 @@
-import type { CheckResult, Extracted } from "../types.ts"
+import type { CheckResult, Extracted } from "../types"
 
 // factories
 const pass = (id: string, message: string): CheckResult => ({ id, type: 'static', status: 'pass', message })

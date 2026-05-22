@@ -1,5 +1,5 @@
-import type { CheckResult } from "../types.ts"
-import { callAnthropic } from "../anthropic.ts"
+import type { CheckResult } from "../types"
+import { callAnthropic } from "../anthropic"
 
 // shape the AI returns for each check
 type AiCheck = {

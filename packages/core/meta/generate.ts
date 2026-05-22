@@ -1,5 +1,5 @@
-import type { Meta } from "../types.ts"
-import { callAnthropic } from "../anthropic.ts"
+import type { Meta } from "../types"
+import { callAnthropic } from "../anthropic"
 
 type GeneratedFields = {
   metaTitle: string

@@ -1,7 +1,7 @@
-import type { CheckResult, ChecksReport, Extracted } from "../types.ts"
-import { runStaticChecks } from "./static.ts"
-import { runAiChecks } from "./ai.ts"
-import { toMarkdown } from "../converter.ts"
+import type { CheckResult, ChecksReport, Extracted } from "../types"
+import { runStaticChecks } from "./static"
+import { runAiChecks } from "./ai"
+import { toMarkdown } from "../converter"
 
 export { toMarkdown }
 
