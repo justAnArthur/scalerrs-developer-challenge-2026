@@ -3,10 +3,10 @@ import { runStaticChecks } from "./static.ts"
 import { runAiChecks } from "./ai.ts"
 import { toMarkdown } from "../converter.ts"
 
-export async function runChecks(extracted: Extracted): Promise<ChecksReport> {
-  const markdown = toMarkdown(extracted.bodyHtml)
+export { toMarkdown }
 
-  console.log('markdown', markdown)
+export async function runChecks(extracted: Extracted): Promise<ChecksReport & { markdown: string }> {
+  const markdown = toMarkdown(extracted.bodyHtml)
 
   // run static and ai checks in parallel
   const [staticChecks, aiChecks] = await Promise.all([
@@ -22,6 +22,6 @@ export async function runChecks(extracted: Extracted): Promise<ChecksReport> {
     errors:   checks.filter(c => c.status === 'error').length,
   }
 
-  return { checks, summary }
+  return { checks, summary, markdown }
 }
 

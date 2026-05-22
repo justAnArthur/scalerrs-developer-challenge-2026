@@ -1,6 +1,8 @@
 import { parseHTML } from "@tkeron/html-parser"
 import { extractFromDoc } from "./extract.ts"
 import { runChecks } from "./checks"
+import { buildMeta } from "./meta/generate.ts"
+import { toMarkdown } from "./converter.ts"
 
 const docId = Bun.env.GOOGLE_DOC_ID!
 
@@ -11,18 +13,31 @@ async function fetchGoogleDoc(id: string) {
 }
 
 const html = await fetchGoogleDoc(docId)
-await Bun.write('./index.html', html)
 
 const extracted = extractFromDoc(parseHTML(html))
-console.log('extracted', extracted)
+const markdown = toMarkdown(extracted.bodyHtml)
 
-const report = await runChecks(extracted)
+// run checks and meta generation in parallel
+const [report, meta] = await Promise.all([
+  runChecks(extracted),
+  buildMeta(markdown, extracted.metas),
+])
 
-console.log(`\n${report.summary.passed} passed · ${report.summary.warnings} warnings · ${report.summary.errors} errors\n`)
+// ---
 
-const icon = { pass: 'PASS', warning: 'WARN', error: 'ERROR' }
+console.log('\nmeta')
+const src = (key: string) => meta.sources[key] === 'doc' ? '[doc]' : '[ai] '
+console.log(`  ${src('metaTitle')}       title:       ${meta.metaTitle}`)
+console.log(`  ${src('metaDescription')} description: ${meta.metaDescription}`)
+console.log(`  ${src('keywords')}        keywords:    ${meta.keywords.join(', ')}`)
+
+// ---
+
+console.log(`\nchecks  ${report.summary.passed} passed · ${report.summary.warnings} warnings · ${report.summary.errors} errors\n`)
+
+const icon = { pass: 'PASS', warning: 'WARN', error: 'FAIL' }
 for (const check of report.checks) {
   const tag = `[${check.type}]`.padEnd(8)
   console.log(`${icon[check.status]} ${tag} ${check.message}`)
-  if (check.suggestion) console.log(`   → ${check.suggestion}`)
+  if (check.suggestion) console.log(`         → ${check.suggestion}`)
 }

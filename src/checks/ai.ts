@@ -1,6 +1,5 @@
 import type { CheckResult } from "../types.ts"
-
-const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages'
+import { callAnthropic } from "../anthropic.ts"
 
 // shape the AI returns for each check
 type AiCheck = {
@@ -10,32 +9,9 @@ type AiCheck = {
   message: string
 }
 
-async function callAnthropic(prompt: string): Promise<AiCheck[]> {
-  const apiKey = Bun.env.ANTHROPIC_API_KEY
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not set')
-
-  const res = await fetch(ANTHROPIC_API, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5',
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  })
-
-  if (!res.ok) throw new Error(`anthropic api error: ${res.status} ${await res.text()}`)
-
-  const data = await res.json() as { content: { type: string; text: string }[] }
-  const text = data.content.find(b => b.type === 'text')?.text ?? ''
-
-  // strip possible Markdown code fences before parsing
-  const json = text.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim()
-  const parsed = JSON.parse(json) as { checks: AiCheck[] }
+async function fetchChecks(prompt: string): Promise<AiCheck[]> {
+  const text = await callAnthropic(prompt)
+  const parsed = JSON.parse(text) as { checks: AiCheck[] }
   return parsed.checks
 }
 
@@ -77,7 +53,6 @@ return this exact structure:
   ]
 }`
 
-  const raw = await callAnthropic(prompt)
+  const raw = await fetchChecks(prompt)
   return raw.map(toCheckResult)
 }
-

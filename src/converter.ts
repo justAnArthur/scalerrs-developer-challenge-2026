@@ -10,7 +10,6 @@ const td = new TurndownService({
 td.remove(['style', 'script', 'head'])
 
 export function toMarkdown(html: string): string {
-  console.log('toMarkdown html', html)
   return td.turndown(html)
 }
 

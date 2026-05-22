@@ -69,7 +69,6 @@ export function extractFromDoc(doc: Document): Extracted {
   }))
 
   const bodyHtml = doc.body?.innerHTML ?? doc.querySelectorAll('body')[0]?.innerHTML ?? ''
-  console.log('bodyHtml', bodyHtml)
 
   return { title, headingsList, wordCount, images, links, metas, bodyHtml }
 }

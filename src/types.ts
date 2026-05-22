@@ -8,6 +8,13 @@ export type Extracted = {
   bodyHtml: string
 }
 
+export type Meta = {
+  metaTitle: string
+  metaDescription: string
+  keywords: string[]
+  sources: Record<string, 'doc' | 'generated'>
+}
+
 export type CheckResult = {
   id: string
   type: 'static' | 'ai'
