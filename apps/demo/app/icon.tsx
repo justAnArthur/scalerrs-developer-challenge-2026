@@ -19,7 +19,7 @@ export default function Icon() {
           fontSize: 16,
           color: "#a1a1aa",
           fontWeight: 600,
-          letterSpacing: -1,
+          letterSpacing: -1
         }}
       >
         qa

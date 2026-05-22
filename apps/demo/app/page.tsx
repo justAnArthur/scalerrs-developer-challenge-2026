@@ -52,7 +52,7 @@ export default function Home() {
 
           <div className="flex-1 flex flex-col overflow-hidden">
             <div className="flex items-center justify-end px-6 py-2 border-b border-zinc-100 bg-white">
-              <CopyButton text={result.html} />
+              <CopyButton text={result.html}/>
               <span className="ml-1.5 text-[10px] text-zinc-300">html</span>
             </div>
             <article
@@ -79,7 +79,7 @@ export default function Home() {
                       <span className={`text-[10px] ${source === "doc" ? "text-zinc-300" : "text-amber-400"}`}>
                         {source === "doc" ? "from doc" : "ai generated"}
                       </span>
-                      <CopyButton text={value as string} />
+                      <CopyButton text={value as string}/>
                     </dt>
                     <dd className="text-zinc-700 leading-snug mt-0.5">{value}</dd>
                   </div>
