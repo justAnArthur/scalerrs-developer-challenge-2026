@@ -1,13 +1,16 @@
 export type Extracted = {
   title?: string
-  headings: { h1: number; h2: number; h3: number }
+  headingsList: string[]
   wordCount: number
   images: { src: string; alt: string }[]
   links: { href: string; text: string }[]
   metas: Record<string, string>
+  bodyHtml: string
 }
 
 export type CheckResult = {
+  id: string
+  type: 'static' | 'ai'
   status: 'pass' | 'warning' | 'error'
   message: string
   suggestion?: string

@@ -1,4 +1,4 @@
-import type { Document } from "@tkeron/html-parser/src/dom-types.ts"
+import type { Document, ChildNode } from "@tkeron/html-parser/src/dom-types.ts"
 import type { Extracted } from "./types.ts"
 
 const supportedMetas = [
@@ -6,6 +6,14 @@ const supportedMetas = [
   { name: 'metaDescription', aliases: ['Meta Description'] },
   { name: 'keywords', aliases: ['Meta Keywords'] }
 ]
+
+// depth-first walk collecting elements whose tag matches the predicate - the querySelectorAll is not fully supported
+function walkElements(node: ChildNode, match: (tag: string) => boolean, result: { tag: string; text: string }[] = []) {
+  const tag = (node as any).tagName?.toLowerCase() as string | undefined
+  if (tag && match(tag)) result.push({ tag, text: (node as any).textContent ?? '' })
+  for (const child of (node as any).childNodes ?? []) walkElements(child, match, result)
+  return result
+}
 
 export function extractFromDoc(doc: Document): Extracted {
   const allParagraphs = doc.querySelectorAll('p')
@@ -26,16 +34,12 @@ export function extractFromDoc(doc: Document): Extracted {
 
   const title = doc.querySelector('h1')?.textContent.trim()
 
-  const headings = {
-    h1: doc.querySelectorAll('h1').length,
-    h2: doc.querySelectorAll('h2').length,
-    h3: doc.querySelectorAll('h3').length,
-  }
+  // ordered headings in document — counts derived in checks as needed
+  const headingsList = walkElements(doc as any, tag => /^h[1-6]$/.test(tag)).map(el => el.tag)
 
-  // word count from all content elements (metas already stripped above)
-  const wordCount = doc
-    .querySelectorAll('p, h1, h2, h3, h4, li')
-    .map(el => el.textContent.trim())
+  // word count from content elements
+  const wordCount = walkElements(doc as any, tag => /^(p|h[1-6]|li)$/.test(tag))
+    .map(el => el.text.trim())
     .join(' ')
     .split(/\s+/)
     .filter(w => w).length
@@ -64,5 +68,8 @@ export function extractFromDoc(doc: Document): Extracted {
     text: a.textContent.trim()
   }))
 
-  return { title, headings, wordCount, images, links, metas }
+  const bodyHtml = doc.body?.innerHTML ?? doc.querySelectorAll('body')[0]?.innerHTML ?? ''
+  console.log('bodyHtml', bodyHtml)
+
+  return { title, headingsList, wordCount, images, links, metas, bodyHtml }
 }

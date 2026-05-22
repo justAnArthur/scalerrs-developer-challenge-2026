@@ -4,12 +4,14 @@
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/turndown": "^5.0.6"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
-    "@tkeron/html-parser": "^1.5.7"
+    "@tkeron/html-parser": "^1.5.7",
+    "turndown": "^7.2.4"
   }
 }

@@ -1,6 +1,6 @@
 import { parseHTML } from "@tkeron/html-parser"
 import { extractFromDoc } from "./extract.ts"
-import { runChecks } from "./checks.ts"
+import { runChecks } from "./checks"
 
 const docId = Bun.env.GOOGLE_DOC_ID!
 
@@ -18,10 +18,11 @@ console.log('extracted', extracted)
 
 const report = await runChecks(extracted)
 
-console.log(`${report.summary.passed} passed · ${report.summary.warnings} warnings · ${report.summary.errors} errors\n`)
+console.log(`\n${report.summary.passed} passed · ${report.summary.warnings} warnings · ${report.summary.errors} errors\n`)
 
+const icon = { pass: 'PASS', warning: 'WARN', error: 'ERROR' }
 for (const check of report.checks) {
-  const icon = { pass: 'YES', warning: 'WARN', error: 'ERROR' }[check.status]
-  console.log(`${icon} [${check.status.toUpperCase()}] ${check.message}`)
-  if (check.suggestion) console.log(`  → ${check.suggestion}`)
+  const tag = `[${check.type}]`.padEnd(8)
+  console.log(`${icon[check.status]} ${tag} ${check.message}`)
+  if (check.suggestion) console.log(`   → ${check.suggestion}`)
 }
