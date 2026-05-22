@@ -2,6 +2,9 @@
 
 article quality pipeline for an seo agency. paste a google doc url, get static and ai-powered checks, generated meta, and a clean html preview.
 
+**demo:** https://scalerrs-developer-challenge-2026.vercel.app
+**walkthrough:** https://www.loom.com/share/b3c41211487d40c5b5289815d43401f0
+
 ## structure
 
 ```
@@ -48,5 +51,3 @@ bun dev
   - process a list of google doc urls in one go, run all checks in parallel, and send a summary notification (slack, email) when everything's done or when something fails.
 - cms integration
   - direct publish to wordpress or shopify with all meta prefilled. the html is already clean and the meta is already generated - it's mostly just a matter of hooking into the api.
-
-
