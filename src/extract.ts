@@ -26,6 +26,20 @@ export function extractFromDoc(doc: Document): Extracted {
 
   const title = doc.querySelector('h1')?.textContent.trim()
 
+  const headings = {
+    h1: doc.querySelectorAll('h1').length,
+    h2: doc.querySelectorAll('h2').length,
+    h3: doc.querySelectorAll('h3').length,
+  }
+
+  // word count from all content elements (metas already stripped above)
+  const wordCount = doc
+    .querySelectorAll('p, h1, h2, h3, h4, li')
+    .map(el => el.textContent.trim())
+    .join(' ')
+    .split(/\s+/)
+    .filter(w => w).length
+
   // images embedded in the doc
   const images = doc.querySelectorAll('img').map(img => ({
     src: img.getAttribute('src') ?? '',
@@ -50,7 +64,5 @@ export function extractFromDoc(doc: Document): Extracted {
     text: a.textContent.trim()
   }))
 
-  return ({ title, images, links, metas })
+  return { title, headings, wordCount, images, links, metas }
 }
-
-
