@@ -1,17 +1,15 @@
 {
   "name": "scalerrs-developer-challenge-2026",
-  "module": "src/index.ts",
   "type": "module",
   "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "devDependencies": {
-    "@types/bun": "latest",
-    "@types/turndown": "^5.0.6"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
-  },
-  "dependencies": {
-    "@tkeron/html-parser": "^1.5.7",
-    "turndown": "^7.2.4"
   }
 }

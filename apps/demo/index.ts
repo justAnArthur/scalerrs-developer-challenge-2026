@@ -1,8 +1,4 @@
-import { parseHTML } from "@tkeron/html-parser"
-import { extractFromDoc } from "./extract.ts"
-import { runChecks } from "./checks"
-import { buildMeta } from "./meta/generate.ts"
-import { toMarkdown } from "./converter.ts"
+import { extractFromHtml, runChecks, buildMeta, toMarkdown } from "@scalerrs/core"
 
 const docId = Bun.env.GOOGLE_DOC_ID!
 
@@ -14,7 +10,7 @@ async function fetchGoogleDoc(id: string) {
 
 const html = await fetchGoogleDoc(docId)
 
-const extracted = extractFromDoc(parseHTML(html))
+const extracted = extractFromHtml(html)
 const markdown = toMarkdown(extracted.bodyHtml)
 
 // run checks and meta generation in parallel
